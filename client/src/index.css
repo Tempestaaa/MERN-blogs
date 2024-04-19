@@ -26,10 +26,12 @@ img {
 
 @keyframes loading {
   25% {
-    @apply bg-fuchsia-400 h-24;
+    @layer bg-fuchsia-400;
+    @apply h-24;
   }
   50% {
-    @apply bg-violet-600 h-5;
+    @layer bg-violet-600;
+    @apply h-5;
   }
 }
 
@@ -51,4 +53,8 @@ img {
 
 .loader :nth-child(6) {
   animation-delay: 1s;
+}
+
+.gradient {
+  @apply bg-gradient-to-r from-gradient-start to-gradient-end;
 }

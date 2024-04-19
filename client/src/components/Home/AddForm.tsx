@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useCreateBlogMutation } from "../services/blogApi";
-import { blogType } from "../types/blogType";
+import { useCreateBlogMutation } from "../../services/blogApi";
+import { blogType } from "../../types/blogType";
 
 type Props = {
   setIsFormOpen: React.Dispatch<React.SetStateAction<boolean>>;

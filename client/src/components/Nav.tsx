@@ -1,5 +1,5 @@
 import { LibraryBig, Plus } from "lucide-react";
-import AddForm from "./AddForm";
+import AddForm from "./Home/AddForm";
 import { useState } from "react";
 
 const Nav = () => {

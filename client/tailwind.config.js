@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 import colors from "tailwindcss/colors";
-import { transform } from "typescript";
 
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -12,6 +11,10 @@ export default {
         hover: "#3f3f3e00",
         sub: "#fff",
         error: colors.red[500],
+        gradient: {
+          start: "#1BFFFF",
+          end: "#2E3192 ",
+        },
       },
       fontFamily: {
         default: '"Merriweather", serif',

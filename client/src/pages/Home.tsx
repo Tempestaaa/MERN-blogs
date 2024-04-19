@@ -1,3 +1,4 @@
+import Blog from "../components/Home/Blog";
 import { useGetAllBlogsQuery } from "../services/blogApi";
 import Loading from "../utils/Loading";
 
@@ -13,8 +14,10 @@ const Home = () => {
         )}
       </div>
 
-      {!isFetching &&
-        data?.map((item) => <div key={item._id}>{item.title}</div>)}
+      <div className="space-y-4">
+        {!isFetching &&
+          data?.map((item) => <Blog key={item._id} item={item} />)}
+      </div>
     </main>
   );
 };
