@@ -2,18 +2,26 @@ import { useState } from "react";
 import { useCreateBlogMutation } from "../services/blogApi";
 import { blogType } from "../types/blogType";
 
-const AddForm = () => {
-  const [formData, setFormData] = useState<Omit<blogType, "_id">>({
-    title: "",
-    author: "",
-    content: "",
-  });
+type Props = {
+  setIsFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const initialState: Omit<blogType, "_id"> = {
+  title: "",
+  author: "",
+  content: "",
+};
+
+const AddForm = ({ setIsFormOpen }: Props) => {
+  const [formData, setFormData] = useState<Omit<blogType, "_id">>(initialState);
 
   const [createBlog] = useCreateBlogMutation();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     createBlog(formData);
+    setFormData(initialState);
+    setIsFormOpen(false);
   };
 
   return (

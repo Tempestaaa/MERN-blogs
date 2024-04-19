@@ -1,10 +1,8 @@
 import { LibraryBig, Plus } from "lucide-react";
-import { useCreateBlogMutation } from "../services/blogApi";
 import AddForm from "./AddForm";
 import { useState } from "react";
 
 const Nav = () => {
-  // const { blog } = useCreateBlogMutation();
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   return (
@@ -25,7 +23,7 @@ const Nav = () => {
             <Plus />
             <span>Add</span>
           </button>
-          {isFormOpen && <AddForm />}
+          {isFormOpen && <AddForm setIsFormOpen={setIsFormOpen} />}
         </div>
       </div>
     </nav>
