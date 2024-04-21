@@ -1,32 +1,57 @@
-import { LibraryBig, Plus } from "lucide-react";
-import AddForm from "./Home/AddForm";
-import { useState } from "react";
+import {
+  Button,
+  Navbar,
+  NavbarCollapse,
+  NavbarToggle,
+  TextInput,
+} from "flowbite-react";
+import { CiSearch } from "react-icons/ci";
+import { IoIosMoon } from "react-icons/io";
+import { IoLibrary } from "react-icons/io5";
+import { Link, useLocation } from "react-router-dom";
 
 const Nav = () => {
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const { pathname } = useLocation();
 
   return (
-    <nav className="py-3">
-      <div className="container mx-auto flex items-center justify-between px-4">
-        {/* LOGO */}
-        <div className="flex items-center gap-1 font-bold text-2xl italic">
-          <LibraryBig />
-          <span>MyBlog</span>
+    <Navbar className="bg-black">
+      {/* Logo */}
+      <Link
+        to="/"
+        className="self-center whitespace-nowrap flex items-center gap-1"
+      >
+        <div className=" px-3 py-2 bg-gradient-to-r from-indigo-500 via-blue-500 to-pink-500 rounded-xl grid place-items-center text-xl">
+          <IoLibrary />
         </div>
+        <span className="text-2xl italic font-semibold">MyBlog</span>
+      </Link>
 
-        {/* CONTROLLERS */}
-        <div className="flex items-center gap-2 relative">
-          <button
-            onClick={() => setIsFormOpen(!isFormOpen)}
-            className="bg-secondary rounded-md py-1 px-2 flex items-center gap-1 hover:bg-white/30"
-          >
-            <Plus />
-            <span>Add</span>
-          </button>
-          {isFormOpen && <AddForm setIsFormOpen={setIsFormOpen} />}
-        </div>
+      {/* Search */}
+      <form>
+        <TextInput
+          id="search"
+          type="text"
+          placeholder="Search..."
+          rightIcon={CiSearch}
+        />
+      </form>
+
+      <div className="flex items-center gap-2">
+        <Button color="dark" pill>
+          <IoIosMoon />
+        </Button>
+        <NavbarToggle />
       </div>
-    </nav>
+
+      <NavbarCollapse>
+        <Navbar.Link as={"div"} active={pathname === ""}>
+          <Link to="/">Home</Link>
+        </Navbar.Link>
+        <Navbar.Link as={"div"} active={pathname === "about"}>
+          <Link to="about">About</Link>
+        </Navbar.Link>
+      </NavbarCollapse>
+    </Navbar>
   );
 };
 
