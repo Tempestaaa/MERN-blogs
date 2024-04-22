@@ -10,11 +10,11 @@ export const createUser = asyncHandler(async (req, res, next) => {
     !username ||
     !email ||
     !password ||
-    username === "" ||
-    email === "" ||
-    password === ""
+    username === null ||
+    email === null ||
+    password === null
   )
-    next(errorHandler(400, "Some fields are empty! Fill them up"));
+    return next(errorHandler(400, "Some fields are empty! Fill them up"));
 
   const hashPassword = bcrypt.hashSync(password, 10);
 
