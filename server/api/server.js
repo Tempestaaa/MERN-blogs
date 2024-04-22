@@ -2,7 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
-import blogRouter from "./routes/blogRouter.js";
+import blogRouter from "../routes/blog.router.js";
+import userRouter from "../routes/user.router.js";
 
 dotenv.config();
 const app = express();
@@ -11,7 +12,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT | 8000;
 
-app.use("/", blogRouter);
+app.use("/api/blog", blogRouter);
+app.use("/api/user", userRouter);
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal server error";
+  res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
+});
 
 mongoose
   .connect(process.env.DB)
