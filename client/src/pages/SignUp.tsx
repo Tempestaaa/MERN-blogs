@@ -1,8 +1,25 @@
 import { Button, Label, TextInput } from "flowbite-react";
+import { useState } from "react";
 import { IoLibrary } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
+const initialState = {
+  username: "",
+  email: "",
+  password: "",
+};
+
 const SignUp = () => {
+  const [formData, setFormData] = useState(initialState);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="mt-20 ">
       <div className="flex flex-col md:flex-row gap-4 max-w-3xl mx-auto">
@@ -20,24 +37,39 @@ const SignUp = () => {
         </div>
         {/* Right */}
         <div className="flex-1 px-8 md:px-0">
-          <form className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
               <Label htmlFor="username" color={"white"}>
                 Username
               </Label>
-              <TextInput type="text" placeholder="Username" id="username" />
+              <TextInput
+                type="text"
+                placeholder="Username"
+                id="username"
+                onChange={handleChange}
+              />
             </div>
             <div>
               <Label htmlFor="email" color={"white"}>
                 Email
               </Label>
-              <TextInput type="text" placeholder="Email" id="email" />
+              <TextInput
+                type="email"
+                placeholder="Email"
+                id="email"
+                onChange={handleChange}
+              />
             </div>
             <div>
               <Label htmlFor="password" color={"white"}>
                 Password
               </Label>
-              <TextInput type="text" placeholder="Password" id="password" />
+              <TextInput
+                type="password"
+                placeholder="Password"
+                id="password"
+                onChange={handleChange}
+              />
             </div>
             <Button gradientDuoTone={"purpleToPink"} type="submit">
               Submit
@@ -46,7 +78,7 @@ const SignUp = () => {
 
           <div className="flex gap-2 mt-5 text-sm">
             <span>Have an account?</span>
-            <Link to="http://localhost:5173/sign-in" className="text-blue-400">
+            <Link to="/sign-in" className="text-blue-400">
               Sign In
             </Link>
           </div>
