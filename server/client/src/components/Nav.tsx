@@ -40,9 +40,11 @@ const Nav = () => {
         <Button color="dark" pill>
           <IoIosMoon />
         </Button>
-        <Button gradientDuoTone="purpleToBlue" outline>
-          <Link to="sign-in">Sign In</Link>
-        </Button>
+        <Link to="sign-in">
+          <Button gradientDuoTone="purpleToBlue" outline>
+            Sign In
+          </Button>
+        </Link>
         <Navbar.Toggle />
       </div>
 
