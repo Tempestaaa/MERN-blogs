@@ -1,29 +1,56 @@
-import { Button, Label, TextInput } from "flowbite-react";
+import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { IoLibrary } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   signInStart,
   signInSuccess,
   signInFailure,
-} from "../services/user/userSlice";
+} from "../services/user/user.slice";
+import { AppDispatch, RootState } from "../services/store";
 
 const initialState = {
-  username: "",
+  email: "",
   password: "",
 };
 
 const SignIn = () => {
   const [formData, setFormData] = useState(initialState);
-  const dispatch = useDispatch();
+  const isLoading = useSelector<RootState>((state) => state.user.isLoading);
+  const errorMsg = useSelector<RootState>((state) => state.user.error);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!formData.email || !formData.password)
+      dispatch(signInFailure("Some fields are missing. Fill them up!"));
+
+    try {
+      dispatch(signInStart());
+      const res = await fetch("api/auth/sign-in", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (data.success === false) dispatch(signInFailure(data.message));
+      if (res.ok) {
+        dispatch(signInSuccess(data));
+        navigate("/");
+      }
+    } catch (error: any) {
+      dispatch(signInFailure(error.message));
+    }
   };
 
   return (
@@ -66,8 +93,19 @@ const SignIn = () => {
                 onChange={handleChange}
               />
             </div>
-            <Button gradientDuoTone={"purpleToPink"} type="submit">
-              Submit
+            <Button
+              gradientDuoTone={"purpleToPink"}
+              type="submit"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Spinner size="sm" />
+                  <span className="ml-2">Loading...</span>
+                </>
+              ) : (
+                "Sign In"
+              )}
             </Button>
           </form>
 
@@ -77,6 +115,12 @@ const SignIn = () => {
               Sign Up
             </Link>
           </div>
+
+          {errorMsg && (
+            <Alert className="mt-4" color="failure">
+              {errorMsg}
+            </Alert>
+          )}
         </div>
       </div>
     </div>

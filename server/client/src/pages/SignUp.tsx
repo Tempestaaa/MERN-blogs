@@ -39,7 +39,7 @@ const SignUp = () => {
       const data = await res.json();
       if (data.success === false) return setErrorMsg(data.message);
       setIsLoading(false);
-      navigate("/sign-in");
+      if (res.ok) navigate("/sign-in");
     } catch (error: any) {
       setErrorMsg(error.message);
       setIsLoading(false);
