@@ -31,20 +31,20 @@ const SignIn = () => {
             <span className="italic font-bold">MyBlog</span>
           </div>
           <p className="text-center md:text-left text-sm">
-            Sign up your account here
+            Sign in your account here
           </p>
         </div>
         {/* Right */}
         <div className="flex-1 px-8 md:px-0">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
-              <Label htmlFor="username" color={"white"}>
-                Username
+              <Label htmlFor="email" color={"white"}>
+                Email
               </Label>
               <TextInput
-                type="text"
-                placeholder="Username"
-                id="username"
+                type="email"
+                placeholder="Email"
+                id="email"
                 onChange={handleChange}
               />
             </div>

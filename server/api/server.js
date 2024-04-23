@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 import blogRouter from "../routes/blog.router.js";
-import userRouter from "../routes/user.router.js";
+import authRouter from "../routes/auth.router.js";
 
 dotenv.config();
 const app = express();
@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT | 8000;
 
 app.use("/api/blog", blogRouter);
-app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
