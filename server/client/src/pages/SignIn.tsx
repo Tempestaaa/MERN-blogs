@@ -1,5 +1,5 @@
 import { Button, Label, TextInput } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IoLibrary } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,13 +17,6 @@ const initialState = {
 const SignIn = () => {
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   const fetchApi = async () => {
-  //     dispatch(signInStart());
-  //     const res = await fetch("");
-  //   };
-  // });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });

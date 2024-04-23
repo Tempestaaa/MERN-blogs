@@ -1,7 +1,7 @@
-import { Button, Label, TextInput } from "flowbite-react";
+import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { IoLibrary } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const initialState = {
   username: "",
@@ -11,17 +11,43 @@ const initialState = {
 
 const SignUp = () => {
   const [formData, setFormData] = useState(initialState);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!formData.username || !formData.email || !formData.password)
+      return setErrorMsg("Some fields are missing. Fill them up!");
+
+    try {
+      setIsLoading(true);
+      setErrorMsg(null);
+      const res = await fetch("api/auth/sign-up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (data.success === false) return setErrorMsg(data.message);
+      setIsLoading(false);
+      navigate("/sign-in");
+    } catch (error: any) {
+      setErrorMsg(error.message);
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="mt-20 ">
+    <div className="min-h-svh mt-20 ">
       <div className="flex flex-col md:flex-row gap-4 max-w-3xl mx-auto">
         {/* Left */}
         <div className="flex-1 space-y-4 md:my-auto">
@@ -71,8 +97,19 @@ const SignUp = () => {
                 onChange={handleChange}
               />
             </div>
-            <Button gradientDuoTone={"purpleToPink"} type="submit">
-              Submit
+            <Button
+              gradientDuoTone={"purpleToPink"}
+              type="submit"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Spinner size="sm" />
+                  <span className="ml-2">Loading...</span>
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </form>
 
@@ -82,6 +119,12 @@ const SignUp = () => {
               Sign In
             </Link>
           </div>
+
+          {errorMsg && (
+            <Alert className="mt-4" color="failure">
+              {errorMsg}
+            </Alert>
+          )}
         </div>
       </div>
     </div>
