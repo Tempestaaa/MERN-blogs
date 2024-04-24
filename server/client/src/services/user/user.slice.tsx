@@ -2,13 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 import { userTypes } from "../../types/userTypes";
 
 type initialStateType = {
-  users: Omit<userTypes[], "_id">;
+  currentUser: Omit<userTypes[], "_id">;
   isLoading: boolean;
   error: string | null;
 };
 
 const initialState: initialStateType = {
-  users: [],
+  currentUser: [],
   isLoading: false,
   error: null,
 };
@@ -22,7 +22,7 @@ export const userSlice = createSlice({
       state.error = null;
     },
     signInSuccess: (state, action) => {
-      state.users = action.payload;
+      state.currentUser = action.payload;
       state.isLoading = false;
       state.error = null;
     },

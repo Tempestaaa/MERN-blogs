@@ -85,6 +85,7 @@ const SignIn = () => {
                 placeholder="Email"
                 id="email"
                 onChange={handleChange}
+                autoComplete="username"
               />
             </div>
             <div>
@@ -96,6 +97,7 @@ const SignIn = () => {
                 placeholder="Password"
                 id="password"
                 onChange={handleChange}
+                autoComplete="current-password"
               />
             </div>
             <Button
