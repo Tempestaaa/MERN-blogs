@@ -17,8 +17,12 @@ const initialState = {
 
 const SignIn = () => {
   const [formData, setFormData] = useState(initialState);
-  const isLoading = useSelector<RootState>((state) => state.user.isLoading);
-  const errorMsg = useSelector<RootState>((state) => state.user.error);
+  const isLoading = useSelector<RootState>(
+    (state) => state.user.isLoading
+  ) as boolean;
+  const errorMsg = useSelector<RootState>((state) => state.user.error) as
+    | string
+    | null;
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
