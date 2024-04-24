@@ -10,8 +10,6 @@ const Nav = () => {
   const { pathname } = useLocation();
   const { currentUser } = useSelector((state: RootState) => state.user);
 
-  console.log(currentUser.username);
-
   return (
     <Navbar className="bg-black border-b-2">
       {/* Logo */}
@@ -45,7 +43,7 @@ const Nav = () => {
         <Button color="dark" pill>
           <IoIosMoon />
         </Button>
-        {currentUser.username && (
+        {currentUser.username ? (
           <Dropdown
             arrowIcon={false}
             inline
@@ -69,13 +67,13 @@ const Nav = () => {
             <Dropdown.Divider />
             <Dropdown.Item>Sign Out</Dropdown.Item>
           </Dropdown>
+        ) : (
+          <Link to="sign-in">
+            <Button gradientDuoTone="purpleToBlue" outline>
+              Sign In
+            </Button>
+          </Link>
         )}
-
-        <Link to="sign-in">
-          <Button gradientDuoTone="purpleToBlue" outline>
-            Sign In
-          </Button>
-        </Link>
 
         <Navbar.Toggle />
       </div>
