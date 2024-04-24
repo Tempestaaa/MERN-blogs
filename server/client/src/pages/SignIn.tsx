@@ -9,6 +9,7 @@ import {
   signInFailure,
 } from "../services/user/user.slice";
 import { AppDispatch, RootState } from "../services/store";
+import OAuth from "../components/OAuth";
 
 const initialState = {
   email: "",
@@ -111,6 +112,7 @@ const SignIn = () => {
                 "Sign In"
               )}
             </Button>
+            <OAuth />
           </form>
 
           <div className="flex gap-2 mt-5 text-sm">
