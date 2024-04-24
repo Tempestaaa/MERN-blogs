@@ -2,13 +2,18 @@ import { createSlice } from "@reduxjs/toolkit";
 import { userTypes } from "../../types/userTypes";
 
 type initialStateType = {
-  currentUser: Omit<userTypes[], "_id">;
+  currentUser: Omit<userTypes, "_id">;
   isLoading: boolean;
   error: string | null;
 };
 
 const initialState: initialStateType = {
-  currentUser: [],
+  currentUser: {
+    username: "",
+    email: "",
+    password: "",
+    profilePicture: "",
+  },
   isLoading: false,
   error: null,
 };

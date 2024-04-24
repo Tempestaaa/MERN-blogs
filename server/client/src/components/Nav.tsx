@@ -5,13 +5,12 @@ import { IoLibrary } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { RootState } from "../services/store";
-import { userTypes } from "../types/userTypes";
 
 const Nav = () => {
   const { pathname } = useLocation();
-  const currentUser = useSelector<RootState>((state) => state.user.currentUser);
+  const { currentUser } = useSelector((state: RootState) => state.user);
 
-  console.log(currentUser);
+  console.log(currentUser.username);
 
   return (
     <Navbar className="bg-black border-b-2">
@@ -46,7 +45,7 @@ const Nav = () => {
         <Button color="dark" pill>
           <IoIosMoon />
         </Button>
-        {currentUser ? (
+        {currentUser.username && (
           <Dropdown
             arrowIcon={false}
             inline
@@ -70,13 +69,14 @@ const Nav = () => {
             <Dropdown.Divider />
             <Dropdown.Item>Sign Out</Dropdown.Item>
           </Dropdown>
-        ) : (
-          <Link to="sign-in">
-            <Button gradientDuoTone="purpleToBlue" outline>
-              Sign In
-            </Button>
-          </Link>
         )}
+
+        <Link to="sign-in">
+          <Button gradientDuoTone="purpleToBlue" outline>
+            Sign In
+          </Button>
+        </Link>
+
         <Navbar.Toggle />
       </div>
 

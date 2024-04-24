@@ -18,12 +18,7 @@ const initialState = {
 
 const SignIn = () => {
   const [formData, setFormData] = useState(initialState);
-  const isLoading = useSelector<RootState>(
-    (state) => state.user.isLoading
-  ) as boolean;
-  const errorMsg = useSelector<RootState>((state) => state.user.error) as
-    | string
-    | null;
+  const { isLoading, error } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -124,9 +119,9 @@ const SignIn = () => {
             </Link>
           </div>
 
-          {errorMsg && (
+          {error && (
             <Alert className="mt-4" color="failure">
-              {errorMsg}
+              {error}
             </Alert>
           )}
         </div>
