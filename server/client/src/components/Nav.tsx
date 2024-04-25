@@ -1,17 +1,20 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
 import { CiSearch } from "react-icons/ci";
-import { IoIosMoon } from "react-icons/io";
 import { IoLibrary } from "react-icons/io5";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { RootState } from "../services/store";
+import { FaMoon, FaSun } from "react-icons/fa";
+import { toggleTheme } from "../services/theme/theme.slice";
 
 const Nav = () => {
   const { pathname } = useLocation();
   const { currentUser } = useSelector((state: RootState) => state.user);
+  const { theme } = useSelector((state: RootState) => state.theme);
+  const dispatch = useDispatch();
 
   return (
-    <Navbar className="bg-black border-b-2">
+    <Navbar className="border-b-2">
       {/* Logo */}
       <Navbar.Brand as={"div"}>
         <Link
@@ -40,8 +43,8 @@ const Nav = () => {
         <Button pill color={"dark"} className="lg:hidden">
           <CiSearch />
         </Button>
-        <Button color="dark" pill>
-          <IoIosMoon />
+        <Button color="dark" pill onClick={() => dispatch(toggleTheme())}>
+          {theme === "light" ? <FaSun /> : <FaMoon />}
         </Button>
         {currentUser.username ? (
           <Dropdown
