@@ -134,7 +134,7 @@ const DashProfile = () => {
             <TextInput type="text" placeholder="*******" />
           </div>
           <Button pill gradientDuoTone="purpleToBlue" outline>
-            Update user
+            Update
           </Button>
           <div className="flex items-center justify-between text-red-500 text-sm">
             <p className="cursor-pointer">Delete user</p>

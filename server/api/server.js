@@ -4,16 +4,20 @@ import cors from "cors";
 import mongoose from "mongoose";
 import blogRouter from "../routes/blog.router.js";
 import authRouter from "../routes/auth.router.js";
+import userRouter from "../routes/user.router.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT | 8000;
 
 app.use("/api/blog", blogRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

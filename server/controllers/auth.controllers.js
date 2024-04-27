@@ -1,5 +1,5 @@
 import User from "../models/user.schema.js";
-import bcrypt from "bcryptjs";
+import bcryptjs from "bcryptjs";
 import errorHandler from "../utils/errorHandler.js";
 import jwt from "jsonwebtoken";
 
@@ -16,7 +16,7 @@ export const signUp = async (req, res, next) => {
   )
     return next(errorHandler(400, "Some fields are empty! Fill them up"));
 
-  const hashPassword = bcrypt.hashSync(password, 10);
+  const hashPassword = bcryptjs.hashSync(password, 10);
 
   const newUser = new User({
     username,
@@ -42,7 +42,7 @@ export const signIn = async (req, res, next) => {
     const validUser = await User.findOne({ email });
     if (!validUser) return next(errorHandler(404, "User not found"));
 
-    const validPassword = bcrypt.compareSync(password, validUser.password);
+    const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword) return next(errorHandler(400, "Invalid password"));
 
     const { password: pass, ...rest } = validUser._doc;
@@ -80,7 +80,7 @@ export const google = async (req, res, next) => {
         .json(rest);
     } else {
       const generatePassword = Math.random().toString(36).slice(-8);
-      const hashPassword = bcrypt.hashSync(generatePassword, 10);
+      const hashPassword = bcryptjs.hashSync(generatePassword, 10);
       const newUser = await User({
         username:
           name.toLowerCase().split(" ").join("") +
