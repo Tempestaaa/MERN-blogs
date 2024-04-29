@@ -15,6 +15,7 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signOutSuccess,
   updateFailure,
   updateStart,
   updateSuccess,
@@ -149,6 +150,19 @@ const DashProfile = () => {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) console.log(data.message);
+      else dispatch(signOutSuccess());
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="mt-10 space-y-8">
       <h1 className="text-center font-bold text-4xl uppercase">Profile</h1>
@@ -237,7 +251,9 @@ const DashProfile = () => {
             <p className="cursor-pointer" onClick={() => setShowModal(true)}>
               Delete account
             </p>
-            <p className="cursor-pointer">Sign out</p>
+            <p className="cursor-pointer" onClick={handleSignOut}>
+              Sign out
+            </p>
           </div>
         </div>
 

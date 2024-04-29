@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { RootState } from "../services/store";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { toggleTheme } from "../services/theme/theme.slice";
+import { signOutSuccess } from "../services/user/user.slice";
 
 const Nav = () => {
   const { pathname } = useLocation();
@@ -13,6 +14,18 @@ const Nav = () => {
   const { theme } = useSelector((state: RootState) => state.theme);
   const dispatch = useDispatch();
 
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) console.log(data.message);
+      else dispatch(signOutSuccess());
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
   return (
     <Navbar className="border-b-2">
       {/* Logo */}
@@ -68,7 +81,7 @@ const Nav = () => {
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
-            <Dropdown.Item>Sign Out</Dropdown.Item>
+            <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
           </Dropdown>
         ) : (
           <Link to="sign-in">
