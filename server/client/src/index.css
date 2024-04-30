@@ -7,3 +7,11 @@
 .hide {
   display: none;
 }
+
+body {
+  height: 100svh;
+}
+
+.ql-editor {
+  font-size: 1.05rem;
+}

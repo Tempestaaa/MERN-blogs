@@ -1,6 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../services/store";
-import { Alert, Button, Label, Modal, TextInput } from "flowbite-react";
+import {
+  Alert,
+  Button,
+  Label,
+  Modal,
+  Spinner,
+  TextInput,
+} from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
 import {
   getDownloadURL,
@@ -21,9 +28,12 @@ import {
   updateSuccess,
 } from "../services/user/user.slice";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 const DashProfile = () => {
-  const { currentUser, error } = useSelector((state: RootState) => state.user);
+  const { currentUser, error, isLoading } = useSelector(
+    (state: RootState) => state.user
+  );
 
   // IMAGE
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -244,9 +254,34 @@ const DashProfile = () => {
               onChange={handleOnChange}
             />
           </div>
-          <Button type="submit" pill gradientDuoTone="purpleToBlue" outline>
-            Update
+          <Button
+            type="submit"
+            pill
+            gradientDuoTone="purpleToBlue"
+            outline
+            disabled={isLoading || imageFileUploading}
+          >
+            {isLoading || imageFileUploading ? (
+              <div className="flex items-center gap-4">
+                <Spinner />
+                <p>Loading...</p>
+              </div>
+            ) : (
+              "Update"
+            )}
           </Button>
+          {currentUser?.isAdmin && (
+            <Link to="/create-post">
+              <Button
+                type="button"
+                gradientDuoTone="purpleToPink"
+                className="w-full"
+              >
+                Create Post
+              </Button>
+            </Link>
+          )}
+
           <div className="flex items-center justify-between text-red-500 text-sm">
             <p className="cursor-pointer" onClick={() => setShowModal(true)}>
               Delete account

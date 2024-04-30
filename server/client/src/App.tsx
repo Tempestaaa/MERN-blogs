@@ -6,6 +6,8 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
+import AdminOnlyRoute from "./components/AdminOnlyRoute";
+import CreatePost from "./pages/CreatePost";
 
 function App() {
   return (
@@ -17,6 +19,9 @@ function App() {
         <Route path="sign-up" element={<SignUp />} />
         <Route element={<PrivateRoute />}>
           <Route path="dashboard" element={<Dashboard />} />
+        </Route>
+        <Route element={<AdminOnlyRoute />}>
+          <Route path="create-post" element={<CreatePost />} />
         </Route>
       </Route>
     </Routes>
