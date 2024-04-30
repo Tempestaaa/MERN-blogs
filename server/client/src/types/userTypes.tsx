@@ -4,4 +4,5 @@ export type userTypes = {
   email: string;
   password: string;
   profilePicture: string;
+  isAdmin?: boolean;
 };
