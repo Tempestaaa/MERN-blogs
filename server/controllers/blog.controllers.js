@@ -1,17 +1,6 @@
 import Blog from "../models/blog.schema.js";
 import errorHandler from "../utils/errorHandler.js";
 
-export const getAllBlogs = async (req, res) => {
-  const blogs = await Blog.find();
-  res.json(blogs);
-};
-
-export const getBlog = async (req, res) => {
-  const blog = await Blog.findById(req.params.id);
-  if (!blog) res.json({ message: "Blog not found" });
-  res.json(blog);
-};
-
 export const createBlog = async (req, res, next) => {
   if (!req.user.isAdmin)
     return next(errorHandler(403, "You are not allowed to create a post"));
@@ -39,14 +28,44 @@ export const createBlog = async (req, res, next) => {
   }
 };
 
-export const editBlog = async (req, res) => {
-  const blog = await Blog.findByIdAndUpdate(req.params.id, req.body);
-  if (!blog) res.json({ message: "Blog not found" });
-  res.json({ message: `${blog.title} updated` });
-};
+export const getAllBlogs = async (req, res, next) => {
+  try {
+    const startIndex = parseInt(req.query.startIndex) || 0;
+    const limit = parseInt(req.query.limit) || 9;
+    const sortDirection = req.query.order === "asc" ? 1 : -1;
+    const blogs = await Blog.find({
+      ...(req.query.userId && { userId: req.query.userId }),
+      ...(req.query.category && { category: req.query.category }),
+      ...(req.query.slug && { slug: req.query.slug }),
+      ...(req.query.blogId && { blogId: req.query.blogId }),
+      ...(req.query.searchTerm && {
+        $or: [
+          { title: { $regex: req.query.searchTerm, $option: "i" } },
+          { title: { $regex: req.query.searchTerm, $option: "i" } },
+        ],
+      }),
+    })
+      .sort({ updateAt: sortDirection })
+      .skip(startIndex)
+      .limit(limit);
 
-export const deleteBlog = async (req, res) => {
-  const blog = await Blog.findByIdAndDelete(req.params.id);
-  if (!blog) res.json({ message: "Blog not found" });
-  res.json({ message: `${blog.title} has been deleted` });
+    const totalBlogs = await Blog.countDocuments();
+    const now = new Date();
+    const oneMonthAgo = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      now.getDate()
+    );
+    const lastMonthBlogs = await Blog.countDocuments({
+      createdAt: { $gte: oneMonthAgo },
+    });
+
+    res.status(200).json({
+      blogs,
+      totalBlogs,
+      lastMonthBlogs,
+    });
+  } catch (error) {
+    next(error);
+  }
 };

@@ -21,7 +21,7 @@ const CreatePost = () => {
   const [imageUploadError, setImageUploadError] = useState("");
   const [formData, setFormData] = useState({
     title: "",
-    category: "",
+    category: "uncategoriezed",
     content: "",
     image: "",
   });
@@ -74,11 +74,13 @@ const CreatePost = () => {
       });
       const data = await res.json();
       if (!res.ok) return setPublishError(data.message);
-      else navigate(`/blog/${data.slug}`);
+      // else navigate(`/blog/${data.slug}`);
     } catch (error) {
       setPublishError("Something went wrong");
     }
   };
+
+  console.log(formData);
 
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-svh">
