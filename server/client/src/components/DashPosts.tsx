@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../services/store";
-import { Button, Table } from "flowbite-react";
+import { Button, Modal, Table } from "flowbite-react";
 import { blogTypes } from "../types/blog.type";
 import { Link } from "react-router-dom";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const DashPosts = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
   const [userBlogs, setUserBlogs] = useState<blogTypes[]>([]);
   const [showMore, setShowMore] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [blogIdToDelete, setBlogIdToDelete] = useState<string | undefined>("");
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
@@ -39,6 +42,26 @@ const DashPosts = () => {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleDeleteBlog = async () => {
+    setShowModal(false);
+    try {
+      const res = await fetch(
+        `/api/blog/deleteblog/${blogIdToDelete}/${currentUser._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) console.log(data.message);
+      else
+        setUserBlogs((prev) => {
+          return prev.filter((blog) => blog._id !== blogIdToDelete);
+        });
+    } catch (error: any) {
+      console.log(error.message);
     }
   };
 
@@ -78,7 +101,16 @@ const DashPosts = () => {
                   </Table.Cell>
                   <Table.Cell>{blog.category}</Table.Cell>
                   <Table.Cell className="flex gap-2">
-                    <Button size="xs" pill color="failure" className="px-1">
+                    <Button
+                      onClick={() => {
+                        setShowModal(true);
+                        setBlogIdToDelete(blog._id);
+                      }}
+                      size="xs"
+                      pill
+                      color="failure"
+                      className="px-1"
+                    >
                       Delete
                     </Button>
                     <Link to={`/update-blog/${blog._id}`}>
@@ -103,6 +135,30 @@ const DashPosts = () => {
       ) : (
         <p>You have no blogs yet</p>
       )}
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        popup
+        size="md"
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="w-14 h-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className="text-xl">
+              Are you sure you want to delete this blog?
+            </h3>
+            <div className="flex justify-center gap-8 mt-8">
+              <Button color="failure" onClick={handleDeleteBlog}>
+                Yes I'm sure
+              </Button>
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
