@@ -5,4 +5,6 @@ export type userTypes = {
   password: string;
   profilePicture: string;
   isAdmin?: boolean;
+  updatedAt?: string | number | Date;
+  createdAt?: string | number | Date;
 };
