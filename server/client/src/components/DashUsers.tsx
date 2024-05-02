@@ -11,7 +11,7 @@ const DashUsers = () => {
   const [showModal, setShowModal] = useState(false);
   const { currentUser } = useSelector((state: RootState) => state.user);
   const [users, setUsers] = useState<userTypes[]>([]);
-  const [userIdToDelete, setUserIdToDelete] = useState("");
+  const [userIdToDelete, setUserIdToDelete] = useState<string | undefined>("");
 
   useEffect(() => {
     try {
@@ -43,25 +43,22 @@ const DashUsers = () => {
     }
   };
 
-  // const handleDeleteUser = async () => {
-  //   setShowModal(false);
-  //   try {
-  //     const res = await fetch(
-  //       `/api/user/deleteuser/${userIdToDelete}/${currentUser._id}`,
-  //       {
-  //         method: "DELETE",
-  //       }
-  //     );
-  //     const data = await res.json();
-  //     if (!res.ok) console.log(data.message);
-  //     else
-  //       setUserBlogs((prev) => {
-  //         return prev.filter((blog) => blog._id !== blogIdToDelete);
-  //       });
-  //   } catch (error: any) {
-  //     console.log(error.message);
-  //   }
-  // };
+  const handleDeleteUser = async () => {
+    setShowModal(false);
+    try {
+      const res = await fetch(`/api/user/delete/${userIdToDelete}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok) console.log(data.message);
+      else
+        setUsers((prev) => {
+          return prev.filter((user) => user._id !== userIdToDelete);
+        });
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className="p-3 overflow-x-auto scrollbar table-auto md:mx-auto  scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
@@ -105,7 +102,7 @@ const DashUsers = () => {
                     <Button
                       onClick={() => {
                         setShowModal(true);
-                        // setUserIdToDelete(user._id)
+                        setUserIdToDelete(user._id);
                       }}
                       size="xs"
                       pill
@@ -145,10 +142,7 @@ const DashUsers = () => {
               Are you sure you want to delete this user?
             </h3>
             <div className="flex justify-center gap-8 mt-8">
-              <Button
-                color="failure"
-                // onClick={handleDeleteUser}
-              >
+              <Button color="failure" onClick={handleDeleteUser}>
                 Yes I'm sure
               </Button>
               <Button color="gray" onClick={() => setShowModal(false)}>
