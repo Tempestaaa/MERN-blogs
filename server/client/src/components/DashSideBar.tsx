@@ -47,13 +47,13 @@ const DashSideBar = () => {
             </Sidebar.Item>
           </Link>
           {currentUser.isAdmin && (
-            <Link to="/dashboard?tab=posts">
+            <Link to="/dashboard?tab=blogs">
               <Sidebar.Item
-                active={tab === "posts"}
+                active={tab === "blogs"}
                 icon={HiDocumentText}
                 as="div"
               >
-                Posts
+                Blogs
               </Sidebar.Item>
             </Link>
           )}

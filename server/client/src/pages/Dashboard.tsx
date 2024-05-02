@@ -20,7 +20,7 @@ const Dashboard = () => {
       </div>
       <div className="flex-1">
         {tab === "profile" && <DashProfile />}
-        {tab === "posts" && <DashPosts />}
+        {tab === "blogs" && <DashPosts />}
       </div>
     </div>
   );
