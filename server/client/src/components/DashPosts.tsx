@@ -8,12 +8,16 @@ import { Link } from "react-router-dom";
 const DashPosts = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
   const [userBlogs, setUserBlogs] = useState<blogTypes[]>([]);
+  const [showMore, setShowMore] = useState(true);
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const res = await fetch(`/api/blog/getblogs?userId=${currentUser._id}`);
         const data = await res.json();
-        if (res.ok) setUserBlogs(data.blogs);
+        if (res.ok) {
+          setUserBlogs(data.blogs);
+          if (data.blogs.length < 9) setShowMore(false);
+        }
       } catch (error: any) {
         console.log(error.message);
       }
@@ -22,52 +26,80 @@ const DashPosts = () => {
     if (currentUser.isAdmin) fetchBlogs();
   }, [currentUser._id]);
 
+  const handleShowMore = async () => {
+    const startIndex = userBlogs.length;
+    try {
+      const res = await fetch(
+        `/api/blog/getblogs?userId=${currentUser._id}&startIndex=${startIndex}`
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setUserBlogs((prev) => [...prev, ...data.blogs]);
+        if (data.blogs.length < 9) setShowMore(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="p-3 overflow-x-auto scrollbar table-auto md:mx-auto  scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {currentUser.isAdmin && userBlogs.length > 0 ? (
-        <Table hoverable className="">
-          <Table.Head>
-            <Table.HeadCell>Date updated</Table.HeadCell>
-            <Table.HeadCell>Post image</Table.HeadCell>
-            <Table.HeadCell>Post title</Table.HeadCell>
-            <Table.HeadCell>Category</Table.HeadCell>
-            <Table.HeadCell>
-              <span>Controllers</span>
-            </Table.HeadCell>
-          </Table.Head>
-          {userBlogs.map((blog) => (
-            <Table.Body key={blog._id} className=" divide-y">
-              <Table.Row>
-                <Table.Cell>
-                  {new Date(blog?.updatedAt).toLocaleDateString()}
-                </Table.Cell>
-                <Table.Cell>
-                  <Link to={`/blog/${blog.slug}`}>
-                    <img
-                      src={blog.image}
-                      alt={blog.title}
-                      className="w-20 h-10 object-cover bg-gray-500"
-                    />
-                  </Link>
-                </Table.Cell>
-                <Table.Cell>
-                  <Link to={`/blog/${blog.slug}`}>{blog.title}</Link>
-                </Table.Cell>
-                <Table.Cell>{blog.category}</Table.Cell>
-                <Table.Cell className="flex gap-2">
-                  <Button size="xs" pill color="failure" className="px-1">
-                    Delete
-                  </Button>
-                  <Link to={`/update-blog/${blog._id}`}>
-                    <Button size="xs" pill color="blue" className="px-1">
-                      Edit
+        <>
+          <Table hoverable className="shadow-md">
+            <Table.Head>
+              <Table.HeadCell>Date updated</Table.HeadCell>
+              <Table.HeadCell>Post image</Table.HeadCell>
+              <Table.HeadCell>Post title</Table.HeadCell>
+              <Table.HeadCell>Category</Table.HeadCell>
+              <Table.HeadCell>
+                <span>Controllers</span>
+              </Table.HeadCell>
+            </Table.Head>
+            {userBlogs.map((blog) => (
+              <Table.Body key={blog._id} className=" divide-y">
+                <Table.Row>
+                  <Table.Cell>
+                    {new Date(blog?.updatedAt).toLocaleDateString()}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/blog/${blog.slug}`}>
+                      <img
+                        src={blog.image}
+                        alt={blog.title}
+                        className="w-20 h-10 object-cover bg-gray-500"
+                      />
+                    </Link>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/blog/${blog.slug}`} className="truncate">
+                      {blog.title}
+                    </Link>
+                  </Table.Cell>
+                  <Table.Cell>{blog.category}</Table.Cell>
+                  <Table.Cell className="flex gap-2">
+                    <Button size="xs" pill color="failure" className="px-1">
+                      Delete
                     </Button>
-                  </Link>
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          ))}
-        </Table>
+                    <Link to={`/update-blog/${blog._id}`}>
+                      <Button size="xs" pill color="blue" className="px-1">
+                        Edit
+                      </Button>
+                    </Link>
+                  </Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            ))}
+          </Table>
+          {showMore && (
+            <button
+              onClick={handleShowMore}
+              className="w-full text-teal-500 self-center text-sm py-7"
+            >
+              Show more
+            </button>
+          )}
+        </>
       ) : (
         <p>You have no blogs yet</p>
       )}
