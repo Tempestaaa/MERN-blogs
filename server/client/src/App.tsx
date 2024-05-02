@@ -7,7 +7,8 @@ import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminOnlyRoute from "./components/AdminOnlyRoute";
-import CreatePost from "./pages/CreatePost";
+import CreateBlog from "./pages/CreateBlog";
+import UpdateBlog from "./pages/UpdateBlog";
 
 function App() {
   return (
@@ -21,7 +22,8 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
         </Route>
         <Route element={<AdminOnlyRoute />}>
-          <Route path="create-post" element={<CreatePost />} />
+          <Route path="create-blog" element={<CreateBlog />} />
+          <Route path="update-blog/:blogId" element={<UpdateBlog />} />
         </Route>
       </Route>
     </Routes>

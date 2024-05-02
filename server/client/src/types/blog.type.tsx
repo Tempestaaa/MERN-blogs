@@ -6,6 +6,6 @@ export type blogTypes = {
   content?: string;
   category?: string;
   slug?: string;
-  updatedAt: string | number | Date;
-  createdAt: string | number | Date;
+  updatedAt?: string | number | Date;
+  createdAt?: string | number | Date;
 };

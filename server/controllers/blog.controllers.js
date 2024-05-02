@@ -12,7 +12,7 @@ export const createBlog = async (req, res, next) => {
     .split(" ")
     .join("-")
     .toLowerCase()
-    .replace(/[^a-zA-Z0-9]/g, "");
+    .replace(/[^a-zA-Z0-9-]/g, "");
 
   const newPost = new Blog({
     ...req.body,
@@ -37,7 +37,7 @@ export const getAllBlogs = async (req, res, next) => {
       ...(req.query.userId && { userId: req.query.userId }),
       ...(req.query.category && { category: req.query.category }),
       ...(req.query.slug && { slug: req.query.slug }),
-      ...(req.query.blogId && { blogId: req.query.blogId }),
+      ...(req.query.blogId && { _id: req.query.blogId }),
       ...(req.query.searchTerm && {
         $or: [
           { title: { $regex: req.query.searchTerm, $option: "i" } },
@@ -77,6 +77,29 @@ export const deleteBlog = async (req, res, next) => {
   try {
     await Blog.findByIdAndDelete(req.params.blogId);
     res.status(200).json("The blog has been deleted");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateBlog = async (req, res, next) => {
+  if (!req.user.isAdmin || req.user.id !== req.params.userId)
+    return next(errorHandler(403, "You are not allowed to update this blog"));
+
+  try {
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      req.params.blogId,
+      {
+        $set: {
+          title: req.body.title,
+          content: req.body.content,
+          category: req.body.category,
+          image: req.body.image,
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedBlog);
   } catch (error) {
     next(error);
   }

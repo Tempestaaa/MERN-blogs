@@ -6,12 +6,13 @@ import { blogTypes } from "../types/blog.type";
 import { Link } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
-const DashPosts = () => {
+const DashBlogs = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
   const [userBlogs, setUserBlogs] = useState<blogTypes[]>([]);
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [blogIdToDelete, setBlogIdToDelete] = useState<string | undefined>("");
+
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
@@ -83,7 +84,8 @@ const DashPosts = () => {
               <Table.Body key={blog._id} className=" divide-y">
                 <Table.Row>
                   <Table.Cell>
-                    {new Date(blog?.updatedAt).toLocaleDateString()}
+                    {blog.updatedAt &&
+                      new Date(blog.updatedAt).toLocaleDateString()}
                   </Table.Cell>
                   <Table.Cell>
                     <Link to={`/blog/${blog.slug}`}>
@@ -163,4 +165,4 @@ const DashPosts = () => {
   );
 };
 
-export default DashPosts;
+export default DashBlogs;

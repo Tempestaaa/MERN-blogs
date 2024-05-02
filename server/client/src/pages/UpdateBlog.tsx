@@ -5,21 +5,25 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { Alert, Button, Select, TextInput } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { blogTypes } from "../types/blog.type";
+import { useSelector } from "react-redux";
+import { RootState } from "../services/store";
 
-const CreatePost = () => {
+const UpdateBlog = () => {
   const [file, setFile] = useState<File>();
   const [imageUploadProgess, setImageUploadProgess] = useState<number | null>(
     null
   );
   const [imageUploadError, setImageUploadError] = useState("");
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<blogTypes>({
+    _id: "",
     title: "",
     category: "uncategoriezed",
     content: "",
@@ -27,6 +31,8 @@ const CreatePost = () => {
   });
   const [publishError, setPublishError] = useState("");
   const navigate = useNavigate();
+  const { blogId } = useParams();
+  const { currentUser } = useSelector((state: RootState) => state.user);
 
   const handleUploadImage = async () => {
     try {
@@ -67,24 +73,48 @@ const CreatePost = () => {
     e.preventDefault();
     setPublishError("");
     try {
-      const res = await fetch("/api/blog/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `/api/blog/updateblog/${formData._id}/${currentUser._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await res.json();
       if (!res.ok) return setPublishError(data.message);
-      // else navigate(`/blog/${data.slug}`);
+      else {
+        navigate(`/blog/${data.slug}`);
+        setPublishError("");
+      }
     } catch (error) {
       setPublishError("Something went wrong");
     }
   };
 
-  console.log(formData);
+  useEffect(() => {
+    try {
+      const fetchBlog = async () => {
+        const res = await fetch(`/api/blog/getblogs?blogId=${blogId}`);
+        const data = await res.json();
+        if (!res.ok) {
+          setPublishError(data.message);
+          return;
+        } else {
+          setFormData(data.blogs[0]);
+          setPublishError("");
+        }
+      };
+
+      fetchBlog();
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }, [blogId]);
 
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-svh">
-      <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
+      <h1 className="text-center text-3xl my-7 font-semibold">Update blog</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex gap-4 justify-between flex-col md:flex-row">
           <TextInput
@@ -96,11 +126,13 @@ const CreatePost = () => {
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
+            value={formData.title}
           />
           <Select
             onChange={(e) =>
               setFormData({ ...formData, category: e.target.value })
             }
+            value={formData.category}
           >
             <option value="uncategoriezed">Select a category</option>
             <option value="javascript">Javascript</option>
@@ -149,9 +181,10 @@ const CreatePost = () => {
           placeholder="Write something..."
           className="h-72 mb-12"
           onChange={(value) => setFormData({ ...formData, content: value })}
+          value={formData.content}
         />
         <Button type="submit" gradientDuoTone="purpleToPink">
-          Publish
+          Update
         </Button>
         {publishError && (
           <Alert color="failure" className="mt-5">
@@ -163,4 +196,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default UpdateBlog;
