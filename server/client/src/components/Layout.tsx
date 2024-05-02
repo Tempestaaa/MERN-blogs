@@ -3,7 +3,7 @@ import Nav from "./Nav";
 
 const Layout = () => {
   return (
-    <div className="min-h-svh flex flex-col font-default">
+    <div className="min-h-svh flex flex-col font-default overflow-auto">
       <Nav />
       <div className="flex-grow">
         <Outlet />
