@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { blogTypes } from "../types/blog.type";
 import { Button, Spinner } from "flowbite-react";
+import CallToAction from "../components/CallToAction";
 
 const Blog = () => {
   const { blogSlug } = useParams();
@@ -42,9 +43,14 @@ const Blog = () => {
       <h1 className="text-3xl mt-10 p-3 text-center max-w-2xl mx-auto lg:text-4xl">
         {blog?.title}
       </h1>
-      <Button color="gray" pill size="xs" className="self-center mt-5">
-        <Link to={`/search?category=${blog?.category}`}>{blog?.category}</Link>
-      </Button>
+      <Link
+        to={`/search?category=${blog?.category}`}
+        className="self-center mt-5"
+      >
+        <Button color="gray" pill size="xs">
+          {blog?.category}
+        </Button>
+      </Link>
 
       <img
         src={blog?.image}
@@ -66,6 +72,10 @@ const Blog = () => {
         className="p-3 max-w-2xl mx-auto w-full blog-content"
         dangerouslySetInnerHTML={{ __html: blog?.content as TrustedHTML }}
       ></div>
+
+      <div className="max-w-4xl mx-auto w-full">
+        <CallToAction />
+      </div>
     </main>
   );
 };
