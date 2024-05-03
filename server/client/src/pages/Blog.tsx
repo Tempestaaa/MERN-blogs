@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { blogTypes } from "../types/blog.type";
 import { Button, Spinner } from "flowbite-react";
 import CallToAction from "../components/CallToAction";
+import CommentSection from "../components/CommentSection";
 
 const Blog = () => {
   const { blogSlug } = useParams();
@@ -36,7 +37,7 @@ const Blog = () => {
   return (
     <main className="p-3 flex flex-col items-start max-w-6xl mx-auto min-h-svh">
       {loading && (
-        <div className="grid place-items-center min-h-svh">
+        <div className="grid place-items-center min-h-svh mx-auto">
           <Spinner size="xl" />
         </div>
       )}
@@ -76,6 +77,7 @@ const Blog = () => {
       <div className="max-w-4xl mx-auto w-full">
         <CallToAction />
       </div>
+      <CommentSection blogId={blog._id} />
     </main>
   );
 };
