@@ -3,7 +3,7 @@ export type blogTypes = {
   _id?: string;
   title?: string;
   image?: string;
-  content?: string;
+  content?: string | TrustedHTML;
   category?: string;
   slug?: string;
   updatedAt?: string | number | Date;

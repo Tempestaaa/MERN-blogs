@@ -181,7 +181,7 @@ const UpdateBlog = () => {
           placeholder="Write something..."
           className="h-72 mb-12"
           onChange={(value) => setFormData({ ...formData, content: value })}
-          value={formData.content}
+          value={formData.content as string}
         />
         <Button type="submit" gradientDuoTone="purpleToPink">
           Update

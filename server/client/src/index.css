@@ -15,3 +15,24 @@ body {
 .ql-editor {
   font-size: 1.05rem;
 }
+
+.blog-content p {
+  @apply mb-2;
+}
+
+.blog-content h1 {
+  @apply text-2xl font-semibold my-6 mx-0;
+}
+
+.blog-content h2 {
+  @apply text-[1.4rem] my-6 mx-0;
+}
+
+.blog-content a {
+  color: rgb(73 149 199);
+  text-decoration: none;
+}
+
+.blog-content a:hover {
+  text-decoration: underline;
+}
