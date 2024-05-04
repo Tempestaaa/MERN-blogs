@@ -11,9 +11,10 @@ type Props = {
   comment: commentTypes;
   onLike: (commentId: any) => Promise<void>;
   onEdit: (comment: commentTypes, editedContent: string) => Promise<void>;
+  onDelete: any;
 };
 
-const Comment = ({ comment, onLike, onEdit }: Props) => {
+const Comment = ({ comment, onLike, onEdit, onDelete }: Props) => {
   const [user, setUser] = useState<userTypes>({
     email: "",
     password: "",
@@ -136,13 +137,22 @@ const Comment = ({ comment, onLike, onEdit }: Props) => {
               </p>
               {currentUser.username &&
                 (currentUser._id === comment.userId || currentUser.isAdmin) && (
-                  <button
-                    type="button"
-                    onClick={handleEdit}
-                    className="text-gray-400 hover:text-blue-500"
-                  >
-                    Edit
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleEdit}
+                      className="text-gray-400 hover:text-blue-500"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onDelete(comment._id as string)}
+                      className="text-gray-400 hover:text-blue-500"
+                    >
+                      Delete
+                    </button>
+                  </>
                 )}
             </div>
           </>
