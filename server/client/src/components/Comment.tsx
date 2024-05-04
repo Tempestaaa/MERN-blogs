@@ -2,18 +2,23 @@ import { useEffect, useState } from "react";
 import { commentTypes } from "../types/comment.type";
 import { userTypes } from "../types/user.types";
 import moment from "moment";
+import { FaThumbsUp } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { RootState } from "../services/store";
 
 type Props = {
   comment: commentTypes;
+  onLike: (commentId: any) => Promise<void>;
 };
 
-const Comment = ({ comment }: Props) => {
+const Comment = ({ comment, onLike }: Props) => {
   const [user, setUser] = useState<userTypes>({
     email: "",
     password: "",
     profilePicture: "",
     username: "",
   });
+  const { currentUser } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const getUser = async () => {
@@ -49,6 +54,28 @@ const Comment = ({ comment }: Props) => {
         </div>
 
         <p className="text-gray-500 pb-2 truncate">{comment.content}</p>
+
+        <div className="flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2">
+          <button
+            type="button"
+            onClick={() => onLike(comment._id)}
+            className={`text-gray-400 hover:text-blue-500 ${
+              currentUser._id &&
+              comment.likes &&
+              comment.likes.includes(currentUser._id) &&
+              "!text-blue-500"
+            }`}
+          >
+            <FaThumbsUp className="text-sm" />
+          </button>
+          <p className="text-gray-400">
+            {comment.numberOfLikes &&
+              comment.numberOfLikes > 0 &&
+              comment.numberOfLikes +
+                " " +
+                (comment.numberOfLikes === 1 ? "like" : "likes")}
+          </p>
+        </div>
       </div>
     </div>
   );

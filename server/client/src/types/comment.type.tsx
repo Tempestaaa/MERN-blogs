@@ -5,4 +5,6 @@ export type commentTypes = {
   content?: string;
   updatedAt?: string | number | Date;
   createdAt?: string | number | Date;
+  likes?: string[];
+  numberOfLikes?: number;
 };
