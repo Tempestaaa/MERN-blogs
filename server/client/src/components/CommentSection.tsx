@@ -58,7 +58,7 @@ const CommentSection = ({ blogId }: Props) => {
     getComments();
   }, [blogId]);
 
-  const handleLikes = async (commentId: any) => {
+  const handleLikes = async (commentId: string) => {
     try {
       if (!currentUser) {
         navigate("/sign-in");
@@ -85,6 +85,14 @@ const CommentSection = ({ blogId }: Props) => {
     } catch (error: any) {
       console.log(error.message);
     }
+  };
+
+  const handleEdit = async (comment: commentTypes, editedContent: string) => {
+    setComments(
+      comments.map((c) =>
+        c._id === comment._id ? { ...c, content: editedContent } : c
+      )
+    );
   };
 
   return (
@@ -152,7 +160,12 @@ const CommentSection = ({ blogId }: Props) => {
               </div>
 
               {comments.map((item) => (
-                <Comment key={item._id} comment={item} onLike={handleLikes} />
+                <Comment
+                  key={item._id}
+                  comment={item}
+                  onLike={handleLikes}
+                  onEdit={handleEdit}
+                />
               ))}
             </>
           )}

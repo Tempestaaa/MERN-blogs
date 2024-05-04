@@ -5,13 +5,15 @@ import moment from "moment";
 import { FaThumbsUp } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { RootState } from "../services/store";
+import { Button, Textarea } from "flowbite-react";
 
 type Props = {
   comment: commentTypes;
   onLike: (commentId: any) => Promise<void>;
+  onEdit: (comment: commentTypes, editedContent: string) => Promise<void>;
 };
 
-const Comment = ({ comment, onLike }: Props) => {
+const Comment = ({ comment, onLike, onEdit }: Props) => {
   const [user, setUser] = useState<userTypes>({
     email: "",
     password: "",
@@ -19,6 +21,8 @@ const Comment = ({ comment, onLike }: Props) => {
     username: "",
   });
   const { currentUser } = useSelector((state: RootState) => state.user);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState(comment.content);
 
   useEffect(() => {
     const getUser = async () => {
@@ -32,6 +36,30 @@ const Comment = ({ comment, onLike }: Props) => {
     };
     getUser();
   }, [comment]);
+
+  const handleEdit = async () => {
+    setIsEditing(true);
+    setEditedContent(comment.content);
+  };
+
+  const handleSave = async () => {
+    try {
+      const res = await fetch(`/api/comment/editcomment/${comment._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: editedContent,
+        }),
+      });
+
+      if (res.ok) {
+        setIsEditing(false);
+        onEdit(comment, editedContent as string);
+      }
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className="flex p-4 border-b dark:border-gray-600 text-sm">
@@ -53,29 +81,72 @@ const Comment = ({ comment, onLike }: Props) => {
           </span>
         </div>
 
-        <p className="text-gray-500 pb-2 truncate">{comment.content}</p>
+        {isEditing ? (
+          <>
+            <Textarea
+              className="mb-2"
+              rows={3}
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
+              onClick={handleEdit}
+            />
+            <div className="flex justify-end gap-2 text-sm">
+              <Button
+                type="button"
+                size="sm"
+                gradientDuoTone="purpleToBlue"
+                onClick={handleSave}
+              >
+                Save
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                gradientDuoTone="purpleToBlue"
+                outline
+                onClick={() => setIsEditing(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="text-gray-500 pb-2 truncate">{comment.content}</p>
 
-        <div className="flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2">
-          <button
-            type="button"
-            onClick={() => onLike(comment._id)}
-            className={`text-gray-400 hover:text-blue-500 ${
-              currentUser._id &&
-              comment.likes &&
-              comment.likes.includes(currentUser._id) &&
-              "!text-blue-500"
-            }`}
-          >
-            <FaThumbsUp className="text-sm" />
-          </button>
-          <p className="text-gray-400">
-            {comment.numberOfLikes &&
-              comment.numberOfLikes > 0 &&
-              comment.numberOfLikes +
-                " " +
-                (comment.numberOfLikes === 1 ? "like" : "likes")}
-          </p>
-        </div>
+            <div className="flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2">
+              <button
+                type="button"
+                onClick={() => onLike(comment._id)}
+                className={`text-gray-400 hover:text-blue-500 ${
+                  currentUser._id &&
+                  comment.likes &&
+                  comment.likes.includes(currentUser._id) &&
+                  "!text-blue-500"
+                }`}
+              >
+                <FaThumbsUp className="text-sm" />
+              </button>
+              <p className="text-gray-400">
+                {comment.numberOfLikes &&
+                  comment.numberOfLikes > 0 &&
+                  comment.numberOfLikes +
+                    " " +
+                    (comment.numberOfLikes === 1 ? "like" : "likes")}
+              </p>
+              {currentUser.username &&
+                (currentUser._id === comment.userId || currentUser.isAdmin) && (
+                  <button
+                    type="button"
+                    onClick={handleEdit}
+                    className="text-gray-400 hover:text-blue-500"
+                  >
+                    Edit
+                  </button>
+                )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
