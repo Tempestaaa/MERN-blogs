@@ -3,7 +3,7 @@ import { Button } from "flowbite-react";
 const CallToAction = () => {
   return (
     <div className="flex flex-col sm:flex-row p-3 border border-teal-500 justify-between items-center rounded-tl-3xl rounded-br-3xl text-center">
-      <div className="flex-1 justify-between flex flex-col">
+      <div className="flex-1 justify-between flex flex-col px-4">
         <h2 className=" text-2xl ">Want to learn more about React?</h2>
         <p className="text-gray-500 my-2">
           Check out these resources with 100 React Projects
@@ -17,6 +17,7 @@ const CallToAction = () => {
           </a>
         </Button>
       </div>
+
       <div className="p-7 flex-1 grid place-items-center">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnsNPQkpDVpbVf97Ih5C81Q_yPNZ-HUS3Up1_AjCoS_g&s" />
       </div>
