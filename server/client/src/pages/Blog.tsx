@@ -4,12 +4,14 @@ import { blogTypes } from "../types/blog.type";
 import { Button, Spinner } from "flowbite-react";
 import CallToAction from "../components/CallToAction";
 import CommentSection from "../components/CommentSection";
+import BlogCard from "../components/BlogCard";
 
 const Blog = () => {
   const { blogSlug } = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [blog, setBlog] = useState<blogTypes>({});
+  const [recentBlogs, setRecentBlogs] = useState<blogTypes[]>([]);
 
   useEffect(() => {
     try {
@@ -33,6 +35,19 @@ const Blog = () => {
       setLoading(false);
     }
   }, [blogSlug]);
+
+  useEffect(() => {
+    try {
+      const fetchRecentBlogs = async () => {
+        const res = await fetch(`/api/blog/getblogs?limit=3`);
+        const data = await res.json();
+        if (res.ok) setRecentBlogs(data.blogs);
+      };
+      fetchRecentBlogs();
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }, []);
 
   return (
     <main className="p-3 flex flex-col items-start max-w-6xl mx-auto min-h-svh">
@@ -78,6 +93,14 @@ const Blog = () => {
         <CallToAction />
       </div>
       <CommentSection blogId={blog._id} />
+
+      <div className="flex flex-col justify-center items-center mb-5 w-full">
+        <h1 className="text-xl mt-5">Recent articles</h1>
+        <div className="flex flex-wrap gap-5 mt-5 justify-center">
+          {recentBlogs &&
+            recentBlogs.map((item) => <BlogCard key={item._id} blog={item} />)}
+        </div>
+      </div>
     </main>
   );
 };
