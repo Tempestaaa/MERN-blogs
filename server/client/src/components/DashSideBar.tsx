@@ -6,6 +6,7 @@ import {
   HiDocumentText,
   HiOutlineUserGroup,
   HiAnnotation,
+  HiChartPie,
 } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
 import { signOutSuccess } from "../services/user/user.slice";
@@ -54,6 +55,15 @@ const DashSideBar = () => {
           </Link>
           {currentUser.isAdmin && (
             <>
+              <Link to="/dashboard?tab=dash">
+                <Sidebar.Item
+                  active={tab === "dash" || !tab}
+                  icon={HiChartPie}
+                  as="div"
+                >
+                  Dashboard
+                </Sidebar.Item>
+              </Link>
               <Link to="/dashboard?tab=blogs">
                 <Sidebar.Item
                   active={tab === "blogs"}
