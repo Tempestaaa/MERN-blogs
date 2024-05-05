@@ -10,6 +10,7 @@ import AdminOnlyRoute from "./components/AdminOnlyRoute";
 import CreateBlog from "./pages/CreateBlog";
 import UpdateBlog from "./pages/UpdateBlog";
 import Blog from "./pages/Blog";
+import Search from "./pages/Search";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="about" element={<About />} />
         <Route path="sign-in" element={<SignIn />} />
         <Route path="sign-up" element={<SignUp />} />
+        <Route path="search" element={<Search />} />
         <Route path="blog/:blogSlug" element={<Blog />} />
         <Route element={<PrivateRoute />}>
           <Route path="dashboard" element={<Dashboard />} />
